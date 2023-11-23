@@ -30,4 +30,13 @@ public class Peer {
         String input = bufferedReader.readLine();
         String[] inputValues = input.split(" ");
     }
+    /**
+     * Este método serve para realizar a comunicação com o servidor do peer atual
+     * @param bufferedReader
+     * @param username
+     * @param serverThread
+     */
+    public void communicate(BufferedReader bufferedReader, String username, ServerThread serverThread){
+
+    }
 }

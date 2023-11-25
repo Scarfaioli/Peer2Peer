@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.Socket;
 
 public class Peer {
     public static void main(String[] args) throws Exception {
@@ -29,6 +30,27 @@ public class Peer {
         System.out.println("  peers para receber mensagem (s para pular):");
         String input = bufferedReader.readLine();
         String[] inputValues = input.split(" ");
+        
+        //Quando esta função for chamada o host e porta passados serão transformados em um socket
+        if(!input.equals("s")) for (int i = 0; i < inputValues.length; i++) {
+            //separo o input pelo ':' de forma que address = {host, port}
+            String[] address = inputValues[i].split(":");
+            Socket socket = null;
+            //passo address para um objeto socket em si
+            try{
+                socket = new Socket(address[0], Integer.valueOf(address[1]));
+                new PeerThread(socket).start();
+                //o socket em questão é do peer que quero me comunicar portanto é iniciada uma 
+                //uma thread do peer em questão passando seu socket para comunicação
+            } catch(Exception e) {
+                if(socket != null){
+                    //caso seja digitado qualquer outro formato que não possa ser usado o socket é fechado
+                    socket.close();
+                }else System.out.println("Entrada inválida. pulado para proximo passo.");
+            }
+        }
+        //realiza a comunicação
+        communicate(bufferedReader, username, serverThread);
     }
     /**
      * Este método serve para realizar a comunicação com o servidor do peer atual

@@ -14,4 +14,19 @@ public class PeerThread extends Thread{
     public PeerThread(Socket socket) throws IOException{
         bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }
+    @Override
+    public void run() {
+        boolean flag = true;
+        while (flag) {
+            try {
+                JsonObject jsonObject = Json.createReader(bufferedReader).readObject();
+                if (jsonObject.containsKey("username")) {
+                    System.out.println("["+jsonObject.getString("username")+"]: "+jsonObject.getString("message"));
+                }
+            } catch (Exception e) {
+                flag = false;
+                interrupt();
+            }
+        }
+    }
 }

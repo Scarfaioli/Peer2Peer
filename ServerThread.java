@@ -18,11 +18,27 @@ public class ServerThread extends Thread{
     public ServerThread(String portNumb) throws IOException {
         serverSocket = new ServerSocket(Integer.valueOf(portNumb));
     }
-
     @Override
     public void run() {
-        
+        //Metodo de execução quando startada a função desta thread é apenas aceitar os socket startando a conexão do
+        //server do peer com  os dos peers conectados e inserindo eles no hash
+        try{
+            while(true) {
+                ServerThreadThread serverThreadThread = new ServerThreadThread(serverSocket.accept(), this);
+                serverThreadThreads.add(serverThreadThread);
+                serverThreadThread.start();
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
-    
+    void sendMessage(String message){
+        //Este metodo envia a mensagem criada no communicate e envia para cada peer mapeado no hash set
+        try {
+            serverThreadThreads.forEach(t-> t.getPrintWriter().println(message));
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     public Set<ServerThreadThread> getServerThreadThreads() { return serverThreadThreads;}
 }

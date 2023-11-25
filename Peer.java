@@ -1,6 +1,8 @@
+import javax.json.Json;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.net.Socket;
 
 public class Peer {
@@ -53,12 +55,35 @@ public class Peer {
         communicate(bufferedReader, username, serverThread);
     }
     /**
-     * Este método serve para realizar a comunicação com o servidor do peer atual
+     * Este método serve para realizar a comunicação com o servidor do peer atual nele construimos e enviamos
+     * as mensagens como Json
      * @param bufferedReader
      * @param username
      * @param serverThread
      */
     public void communicate(BufferedReader bufferedReader, String username, ServerThread serverThread){
+        try {
+            System.out.println("> Agora voce pode comunicar (e para encerrar, c para mudar)");
+            boolean flag = true;
+            while (flag){
+                String message = bufferedReader.readLine();
+                if (message.equals("e")){
+                    flag = false;
+                    break;
+                } else if (message.equals("c")){
+                    updateListenToPeers(bufferedReader, username, serverThread);
+                } else{
+                    StringWriter stringWriter = new StringWriter();
+                    Json.createWriter(stringWriter).writeObject(Json.createObjectBuilder()
+                            .add("username", username)
+                            .add("message", message)
+                            .build());
+                    serverThread.sendMessage(stringWriter.toString());
+                }
+            }
+            System.exit(0);
+        } catch (Exception e){
 
+        }
     }
 }

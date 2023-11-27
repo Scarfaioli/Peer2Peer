@@ -1,4 +1,3 @@
-import javax.json.Json;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
@@ -73,10 +72,7 @@ public class Peer {
                     updateListenToPeers(bufferedReader, username, serverThread);
                 } else{
                     StringWriter stringWriter = new StringWriter();
-                    Json.createWriter(stringWriter).writeObject(Json.createObjectBuilder()
-                            .add("username", username)
-                            .add("message", message)
-                            .build());
+                    stringWriter.write(message);
                     serverThread.sendMessage(stringWriter.toString());
                 }
             }

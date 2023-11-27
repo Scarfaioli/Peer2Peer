@@ -2,8 +2,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
-import javax.json.Json;
-import javax.json.JsonObject;
 
 public class PeerThread extends Thread{
     private BufferedReader bufferedReader;
@@ -23,10 +21,9 @@ public class PeerThread extends Thread{
         //até a chamada do metodo stop ou alguma falha no try que altere a flag no catch, interrompendo a thread.
         while (flag) {
             try {
-                JsonObject jsonObject = Json.createReader(bufferedReader).readObject();
-                if (jsonObject.containsKey("username")) {
-                    System.out.println("[" + jsonObject.getString("username") + "]: " + jsonObject.getString("message"));
-                }
+                String msg = bufferedReader.readLine();
+                System.out.println(this.getName()+":" + msg);
+                
             } catch (Exception e) {
                 flag = false;
                 interrupt();
